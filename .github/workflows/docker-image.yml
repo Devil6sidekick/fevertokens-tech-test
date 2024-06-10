@@ -24,11 +24,11 @@ jobs:
 
       - name: Copy SSH public key to manager node
         run: |
-          scp -o StrictHostKeyChecking=no $HOME/.ssh/id_ed25519.pub ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/.ssh/authorized_keys
+          cp -o StrictHostKeyChecking=no $HOME/.ssh/id_ed25519.pub ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/.ssh/authorized_keys
 
       - name: Deploy application to Docker Swarm
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml index.html ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
+          cp -o StrictHostKeyChecking=no docker-compose.yml index.html ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
           ssh ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "
           docker stack deploy --compose-file ~/docker-compose.yml fevertokens
           "
