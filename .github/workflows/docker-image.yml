@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'index.html'
-      - 'docker-compose.yml'
 
 jobs:
   deploy:
@@ -17,19 +16,11 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Generate SSH key
-        run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
-
-      - name: Add SSH key to agent
+      - name: Deploy application to Docker Swarm
+        env:
+          MANAGER_IP: ${{ secrets.MANAGER_IP }}
         run: |
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_ed25519
-
-      - name: Copy public key to Docker Swarm manager node
-        run: |
-          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "mkdir -p ~/.ssh && echo $(cat ~/.ssh/id_ed25519.pub) >> ~/.ssh/authorized_keys"
-
-      - name: Deploy application stack to Docker Swarm
-        run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
-          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "docker stack deploy --compose-file ~/docker-compose.yml fevertokens"
+          scp -o StrictHostKeyChecking=no docker-compose.yml index.html ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
+          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "
+          docker stack deploy --compose-file ~/docker-compose.yml fevertokens
+          "
