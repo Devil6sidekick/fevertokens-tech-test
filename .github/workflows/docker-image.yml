@@ -17,10 +17,8 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name: Deploy application to Docker Swarm
-        env:
-          MANAGER_IP: ${{ secrets.MANAGER_IP }}
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml index.html ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
-          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "
+          scp docker-compose.yml index.html ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/
+          ssh ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "
           docker stack deploy --compose-file ~/docker-compose.yml fevertokens
           "
