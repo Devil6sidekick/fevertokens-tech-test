@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Deploy Docker Stack
 
 on:
   push:
@@ -6,23 +6,27 @@ on:
       - 'index.html'
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Generate SSH key
+        run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - name: Add SSH key to agent
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fevertokens-test:latest
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy pub key to manager node
+        run: scp -o StrictHostKeyChecking=no ~/.ssh/id_ed25519.pub ${{ secrets.MANAGER_IP }}:~/id_ed25519.pub
+
+      - name: Deploy application stack to Docker Swarm
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.MANAGER_IP }} "docker stack deploy --compose-file docker-compose.yml fevertokens"
