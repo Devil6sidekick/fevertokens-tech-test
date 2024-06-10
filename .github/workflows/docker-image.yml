@@ -25,7 +25,7 @@ jobs:
       - name: Copy SSH public key to manager node
         run: |
           sftp -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com <<EOF
-          put $HOME/.ssh/id_ed25519.pub ~/.ssh/authorized_keys
+          put $HOME/.ssh/id_ed25519.pub /.ssh/authorized_keys
           EOF
 
       - name: Deploy application to Docker Swarm
