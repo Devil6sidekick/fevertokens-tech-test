@@ -27,9 +27,7 @@ jobs:
 
       - name: Copy public key to Docker Swarm manager node
         run: |
-          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "mkdir -p ~/.ssh"
-          scp -o StrictHostKeyChecking=no ~/.ssh/id_ed25519.pub ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com:~/.ssh/id_ed25519.pub
-          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys"
+          ssh -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com "mkdir -p ~/.ssh && echo $(cat ~/.ssh/id_ed25519.pub) >> ~/.ssh/authorized_keys"
 
       - name: Deploy application stack to Docker Swarm
         run: |
