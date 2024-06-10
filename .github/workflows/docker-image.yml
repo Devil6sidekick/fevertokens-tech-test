@@ -25,4 +25,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/fevertokens-test:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fevertokens-test:latest
