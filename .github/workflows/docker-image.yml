@@ -48,4 +48,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
 
           script: |
-            docker stack deploy -c /root/docker-compose.yml fevertockens
+            touch reda.txt
