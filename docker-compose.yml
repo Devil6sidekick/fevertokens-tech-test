@@ -5,11 +5,11 @@ services:
     image: nginx:stable-alpine-otel
     ports:
       - "80:80"
-    deploy:
-      placement:
-        constraints:
-          -node.role==worker
     volumes:
       - type: bind
         source: ./index.html
         target: /usr/share/nginx/html/index.html
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
