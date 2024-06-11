@@ -48,4 +48,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
 
           script: |
-            touch reda.txt
+            docker stack deploy -c /root/docker-compose.yml fevertockens
+          command_timeout: 10
