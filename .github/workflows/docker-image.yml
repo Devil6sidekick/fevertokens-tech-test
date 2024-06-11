@@ -1,10 +1,10 @@
-
 name: Deploy Docker Stack
 
 on:
   push:
     paths:
       - 'index.html'
+      - 'docker-compose.yml'
 
 jobs:
   deploy:
@@ -16,16 +16,33 @@ jobs:
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
-      - name: Set up SSH key
-        run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
-        
+      
+      - name: Copy Docker Compose file to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 8022
+          source: 'docker-compose.yml'
+          target: '/'
+
+      - name: Copy index.html file to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 8022
+          source: 'index.html'
+          target: '/'
+
       - name: Execute Remote SSH Command
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          
+          port: 8022
           script: |
-            touch ali.txt
-            ls -al
+            docker stack deploy -c docker-compose.yml fevertockens
