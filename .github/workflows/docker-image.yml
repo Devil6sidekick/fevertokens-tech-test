@@ -1,3 +1,4 @@
+
 name: Deploy Docker Stack
 
 on:
@@ -18,33 +19,22 @@ jobs:
           ssh-keygen -t ed25519 -P "" -f $HOME/.ssh/id_ed25519
           eval "$(ssh-agent -s)"
           ssh-add $HOME/.ssh/id_ed25519
-
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name: Copy SSH public key to manager node
         run: |
-          sftp -o StrictHostKeyChecking=no ip172-18-0-110-cpjp5bol2o9000f0imsg@direct.labs.play-with-docker.com <<EOF
+          sftp -o StrictHostKeyChecking=no ip172-18-0-221-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
           put $HOME/.ssh/id_ed25519.pub /root/.ssh/authorized_keys
           EOF
-          ssh -o StrictHostKeyChecking=no ip172-18-0-110-cpjp5bol2o9000f0imsg@direct.labs.play-with-docker.com "
+      - name: Add files to Docker Swarm
+        run: |
+          sftp -o StrictHostKeyChecking=no ip172-18-0-221-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
+          put docker-compose.yml index.html ~/
+          EOF
+        
+      - name: Deploy application to Docker Swarm
+        run: |
+          ssh root@192.168.0.13 "
           docker stack deploy --compose-file ~/docker-compose.yml fevertokens
           "
-
-    #   - name: Add files to Docker Swarm
-    #     run: |
-    #       sftp -o StrictHostKeyChecking=no ip172-18-0-110-cpjp5bol2o9000f0imsg@direct.labs.play-with-docker.com <<EOF
-    #       put docker-compose.yml index.html ~/
-    #       EOF
-        
-    #       - name: ssh proxy command
-    #       uses: appleboy/ssh-action@v1.0.3
-    #       with:
-    #         host: direct.labs.play-with-docker.com
-    #         username: ip172-18-0-123-cpjljna91nsg00fkkjng
-    #         key: ${{ secrets.KEY }}
-    #         port: 22
-    #         script: |
-    #           ssh -o StrictHostKeyChecking=no ip172-18-0-110-cpjp5bol2o9000f0imsg@direct.labs.play-with-docker.com "
-    #       docker stack deploy --compose-file ~/docker-compose.yml fevertokens
-    #       "
