@@ -18,10 +18,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y openssh-client
       
       - name: Copy files to remote server
-        run: sftp -o StrictHostKeyChecking=no ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
-            put index.html /root/index.html
-            put docker-compose.yml /root/docker-compose.yml
-            EOF
+        run: |
+          sftp -o StrictHostKeyChecking=no ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
+          put docker-compose.yml /root/
+          put index.html /root/
+          EOF
 
       - name: Execute Remote SSH Command
         uses: appleboy/ssh-action@v1.0.3
