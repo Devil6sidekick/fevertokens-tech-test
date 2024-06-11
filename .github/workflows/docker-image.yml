@@ -22,7 +22,7 @@ jobs:
 
       - name: Add files to Docker Swarm
         run: |
-          sftp -o StrictHostKeyChecking=no  ip172-18-0-129-cpk8d6qim2rg00dmipgg@direct.labs.play-with-docker.com <<EOF
+          sftp -o StrictHostKeyChecking=no  ip172-18-0-112-cpk8d6qim2rg00dmipgg@direct.labs.play-with-docker.com <<EOF
           put docker-compose.yml /root/
           put index.html /root/
           EOF
