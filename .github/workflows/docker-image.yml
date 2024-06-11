@@ -22,7 +22,7 @@ jobs:
 
       - name: Add files to Docker Swarm
         run: |
-          sftp -o StrictHostKeyChecking=no  ${{ secrets.SSH_HOST }}@${{ env.MANAGER_IP }} <<EOF
+          sftp -o StrictHostKeyChecking=no  ${{ env.MANAGER_IP }}@${{ secrets.SSH_HOST }} <<EOF
           put docker-compose.yml /root/
           put index.html /root/
           put script /root/
