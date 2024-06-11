@@ -35,6 +35,6 @@ jobs:
         
       - name: Deploy application to Docker Swarm
         run: |
-          ssh root@192.168.0.13 "
+          ssh ip172-18-0-221-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com "
           docker stack deploy --compose-file ~/docker-compose.yml fevertokens
           "
