@@ -22,7 +22,7 @@ jobs:
 
       - name: Add files to Docker Swarm
         run: |
-          sftp -o StrictHostKeyChecking=no  ${{ secrets.SSH_HOST }}@$MANAGER_IP <<EOF
+          sftp -o StrictHostKeyChecking=no  ${{ secrets.SSH_HOST }}@${{ env.MANAGER_IP }} <<EOF
           put docker-compose.yml /root/
           put index.html /root/
           put script /root/
@@ -45,7 +45,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: $MANAGER_IP
+          username: ${{ env.MANAGER_IP }}
           key: ${{ secrets.SSH_KEY }}
 
           script: |
