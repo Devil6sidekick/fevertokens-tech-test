@@ -15,9 +15,9 @@ jobs:
 
       - name: Set up SSH key
         run: |
-          ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
+          ssh-keygen -t ed25519 -P "" -f /root/runner/.ssh/id_ed25519
           eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_ed25519
+          ssh-add /root/runner/.ssh/id_ed25519
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
@@ -25,7 +25,7 @@ jobs:
       - name: Copy SSH public key to manager node
         run: |
           sftp -o StrictHostKeyChecking=no ip172-18-0-123-cpjljna91nsg00fkkjng@direct.labs.play-with-docker.com <<EOF
-          put ~/.ssh/id_ed25519.pub /root/.ssh/authorized_keys
+          put /root/runner/.ssh/id_ed25519.pub /root/.ssh/authorized_keys
           EOF
 
       - name: Add files to Docker Swarm
