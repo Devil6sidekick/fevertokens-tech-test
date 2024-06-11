@@ -27,5 +27,5 @@ jobs:
           put index.html /root/
           EOF
       - name: Deploy application to Docker Swarm
-        run: ssh ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com "docker stack deploy --compose-file ~/docker-compose.yml fevertokens"
+        run: ssh -o StrictHostKeyChecking=no ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com "docker stack deploy --compose-file ~/docker-compose.yml fevertokens"
           
