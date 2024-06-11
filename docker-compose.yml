@@ -11,5 +11,5 @@ services:
         target: /usr/share/nginx/html/index.html
     deploy:
       placement:
-        constraints:
-          - node.role == worker
+       constraints:
+        - node.role == worker

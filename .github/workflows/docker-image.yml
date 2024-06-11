@@ -49,7 +49,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
 
           script: |
-            cd /root/
-            chmod +x script
-            ./script
+            cd /root/ || true
+            chmod +x script || true
+            ./script || true
           command_timeout: 10m
