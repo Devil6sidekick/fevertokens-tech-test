@@ -10,6 +10,6 @@ services:
         source: ./index.html
         target: /usr/share/nginx/html/index.html
     deploy:
-      placement:
-       constraints:
-        - node.role == worker
+     placement:
+      constraints:
+       - node.role == worker
