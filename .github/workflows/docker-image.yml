@@ -17,6 +17,13 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
       
+      - name: Set up SSH key
+        run: |
+          mkdir -p $HOME/.ssh
+          ssh-keygen -t ed25519 -P "" -f $HOME/.ssh/id_ed25519
+          eval "$(ssh-agent -s)"
+          ssh-add $HOME/.ssh/id_ed25519
+
       - name: Copy files to remote server
         run: |
           sftp -o StrictHostKeyChecking=no ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
