@@ -18,7 +18,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y openssh-client
       - name: Set up SSH key
         run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
+        
+      - name: Execute Remote SSH Command
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           
-
-      - name: Deploy application to Docker Swarm
-        run: ssh -o ServerAliveCountMax=30 ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com "ls"
+          script: |
+            whoami
+            ls -al
