@@ -49,4 +49,4 @@ jobs:
 
           script: |
             docker stack deploy -c /root/docker-compose.yml fevertockens
-          command_timeout: 10
+          command_timeout: 10m
