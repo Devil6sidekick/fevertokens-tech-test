@@ -7,7 +7,7 @@ on:
       - 'docker-compose.yml'
 
 jobs:
-  deploy:
+  transfer-files:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,36 +16,34 @@ jobs:
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
-
       - name: Set up SSH key
         run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
-      
-      - name: Copy Docker Compose file to remote server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
           
-          source: 'docker-compose.yml'
-          target: '/'
 
-      - name: Copy index.html file to remote server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+      - name: Add files to Docker Swarm
+        run: |
+          sftp -o StrictHostKeyChecking=no ip172-18-0-135-cpk33fq91nsg00eubg60@direct.labs.play-with-docker.com <<EOF
+          put docker-compose.yml /root/
+          put index.html /root/
+          EOF
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: transfer-files
+
+    steps:
+
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+      - name: Set up SSH key
+        run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
           
-          source: 'index.html'
-          target: '/'
-
       - name: Execute Remote SSH Command
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          
+          port: 8022
           script: |
-            docker stack deploy -c docker-compose.yml fevertockens
+            docker stack deploy -c /root/docker-compose.yml fevertockens
