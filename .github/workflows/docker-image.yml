@@ -5,7 +5,6 @@ on:
     paths:
       - 'index.html'
       - 'docker-compose.yml'
-      - 'script'
 
 jobs:
   transfer-files:
@@ -17,13 +16,13 @@ jobs:
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
-
       - name: Set up SSH key
         run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
+          
 
       - name: Add files to Docker Swarm
         run: |
-          sftp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 -P 8022 ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<EOF
+          sftp -o StrictHostKeyChecking=no  ip172-18-0-112-cpk8d6qim2rg00dmipgg@direct.labs.play-with-docker.com <<EOF
           put docker-compose.yml /root/
           put index.html /root/
           put script /root/
@@ -39,24 +38,18 @@ jobs:
 
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client
-
       - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_ed25519
-
+        run: ssh-keygen -t ed25519 -P "" -f ~/.ssh/id_ed25519
+          
       - name: Execute Remote SSH Command
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          port: 8022
+
           script: |
-            cd /root
+            cd /root/
             chmod +x script
             ./script
           command_timeout: 10m
