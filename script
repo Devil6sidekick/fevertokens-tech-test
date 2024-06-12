@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker stack deploy -c docker-compose.yml fevertockens
+chmod +x docker_command
+./docker_command
