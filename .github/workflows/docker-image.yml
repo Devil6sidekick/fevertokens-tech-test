@@ -26,6 +26,7 @@ jobs:
           put docker-compose.yml /root/
           put index.html /root/
           put script /root/
+          put docker_command /root/
           EOF
 
   deploy:
