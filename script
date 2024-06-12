@@ -1,1 +1,1 @@
-docker stack deploy -c docker-compose.yml fevertockens
+docker -H stack deploy -c docker-compose.yml fevertockens
