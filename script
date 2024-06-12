@@ -1,4 +1,3 @@
 #!/bin/bash
 
-docker node update --availability drain manager1
 docker stack deploy -c /root/docker-compose.yml fevertockens
