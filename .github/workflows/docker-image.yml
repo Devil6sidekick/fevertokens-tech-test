@@ -50,5 +50,5 @@ jobs:
         
                   script: |
                     chmod +x script
-                    sh script
+                    ./script
                   command_timeout: 10m
