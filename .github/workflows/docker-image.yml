@@ -49,5 +49,6 @@ jobs:
                   key: ${{ secrets.SSH_KEY }}
         
                   script: |
-                    docker stack deploy -c docker-compose.yml fevertockens
+                    chmod +x script
+                    sh script
                   command_timeout: 10m
