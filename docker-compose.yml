@@ -9,4 +9,8 @@ services:
       - type: bind
         source: ./index.html
         target: /usr/share/nginx/html/index.html
-    
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
